@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.example.apiibge.objetos.Estado;
@@ -19,8 +21,10 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    public ProgressDialog carregando;
+    private static ProgressBar carregando;
+
     Spinner spinnerEstados;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         spinnerEstados = findViewById(R.id.spinner_estados);
+        carregando = findViewById(R.id.progressBar);
 
         String respostaIBGE = null;
         SecondActivity secondActivity = new SecondActivity(this);
@@ -59,5 +64,8 @@ public class MainActivity extends AppCompatActivity {
         spinnerEstados.setAdapter(adapterEstados);
 
 
+    }
+    public static void exibirProgress(boolean exibir){
+        carregando.setVisibility(exibir ? View.VISIBLE : View.GONE);
     }
 }

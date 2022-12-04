@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.io.PipedReader;
@@ -14,15 +15,16 @@ import java.util.Scanner;
 public class SecondActivity extends AsyncTask<Void, Void, String> {
 
     MainActivity mainActivity = new MainActivity();
-    ProgressDialog carregando = mainActivity.carregando;
-
+//    ProgressBar carregando = mainActivity.carregando;
     private Context spContext;
+
     public SecondActivity(Context context){
         spContext = context;
     }
     @Override
     protected void onPreExecute(){
-        carregando = ProgressDialog.show(spContext, "Carregando Estados", "Por favor Aguarde...");
+        mainActivity.exibirProgress(true);
+
     }
 
     @Override
@@ -58,7 +60,7 @@ public class SecondActivity extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String dados){
-       carregando.dismiss();
+        mainActivity.exibirProgress(false);
 
     }
 
