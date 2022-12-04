@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         for(Estado estado: estados){
            estadosParaSpinner.add(estado.getNome());
         }
+
+        Collections.sort(estadosParaSpinner);
 
         //formata o arraylist de arraylist para uma forma que seja compativel com o spinner
         ArrayAdapter<String> adapterEstados = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
