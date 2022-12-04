@@ -41,17 +41,19 @@ public class MainActivity extends AppCompatActivity {
 
 
         Gson gsonEstados = new GsonBuilder().setPrettyPrinting().create();
-        Estado[] estados = gsonEstados.fromJson(respostaEstados, Estado[].class);
+        final Estado[] estados = gsonEstados.fromJson(respostaEstados, Estado[].class);
 
         ArrayList<String> estadosParaSpinner = new ArrayList<>();
-        ArrayList<String> siglasEstados = new ArrayList<>();
 
         for(Estado estado: estados){
            estadosParaSpinner.add(estado.getNome());
-           siglasEstados.add(estado.getSigla());
         }
 
         Collections.sort(estadosParaSpinner);
+
+        /*
+
+         */
 
         //formata o arraylist de arraylist para uma forma que seja compativel com o spinner
         ArrayAdapter<String> adapterEstados = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
@@ -63,7 +65,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
-                solicitaMunicipios(siglasEstados.get(position));
+                for (Estado estado:estados){
+                    if (estado.getNome().equals(spinnerEstados.getSelectedItem().toString())){
+                        solicitaMunicipios(estado.getSigla());
+                    }
+                }
+
+
             }
 
             @Override
@@ -74,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
             }
 
             @Override
