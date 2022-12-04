@@ -58,11 +58,7 @@ public class SecondActivity extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String dados){
-        if (dados != null) {
-            Log.d("onPost", dados);
-        }else{
-            Log.d("onPost", "null");
-        }
+       carregando.dismiss();
 
     }
 
