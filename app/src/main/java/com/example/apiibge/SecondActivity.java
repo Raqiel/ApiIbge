@@ -1,15 +1,29 @@
 package com.example.apiibge;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.PipedReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
 public class SecondActivity extends AsyncTask<Void, Void, String> {
+
+    MainActivity mainActivity = new MainActivity();
+    ProgressDialog carregando = mainActivity.carregando;
+
+    private Context spContext;
+    public SecondActivity(Context context){
+        spContext = context;
+    }
+    @Override
+    protected void onPreExecute(){
+        carregando = ProgressDialog.show(spContext, "Carregando Estados", "Por favor Aguarde...");
+    }
 
     @Override
     protected String doInBackground(Void... voids) {
@@ -40,6 +54,16 @@ public class SecondActivity extends AsyncTask<Void, Void, String> {
 
 
         return respostaIBGE.toString();
+    }
+
+    @Override
+    protected void onPostExecute(String dados){
+        if (dados != null) {
+            Log.d("onPost", dados);
+        }else{
+            Log.d("onPost", "null");
+        }
+
     }
 
 

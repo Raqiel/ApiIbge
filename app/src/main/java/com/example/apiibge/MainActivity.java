@@ -2,6 +2,7 @@ package com.example.apiibge;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -13,13 +14,15 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
+    public ProgressDialog carregando;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         String respostaIBGE = null;
-        SecondActivity secondActivity = new SecondActivity();
+        SecondActivity secondActivity = new SecondActivity(this);
 
         try {
             respostaIBGE = secondActivity.execute().get();
@@ -33,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
         Gson gsonEstados = new GsonBuilder().setPrettyPrinting().create();
         Estado[] estados = gsonEstados.fromJson(respostaIBGE, Estado[].class);
 
-        for(Estado estado: estados){
-            Log.d("ID", String.valueOf(estado.getId()));
-            Log.d("Sigla", estado.getSigla());
-            Log.d("Nome", estado.getNome());
-        }
+//        for(Estado estado: estados){
+//            Log.d("ID", String.valueOf(estado.getId()));
+//            Log.d("Sigla", estado.getSigla());
+//            Log.d("Nome", estado.getNome());
+//        }
 
 
     }
