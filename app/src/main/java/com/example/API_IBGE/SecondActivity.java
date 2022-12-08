@@ -1,4 +1,4 @@
-package com.example.apiibge;
+package com.example.API_IBGE;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -80,6 +80,33 @@ public class SecondActivity extends AsyncTask<String, Void, String> {
 
 
             return respostaMunicipios.toString();
+        }
+        else  if(params[0].equals("subdistrito")){
+
+            StringBuilder respostaSubdistritos = new StringBuilder();
+
+            try {
+                URL urlSubdistritos = new URL("https://servicodados.ibge.gov.br/api/v1/localidades/municipios/"+params[1]+"/subdistritos");
+
+                HttpURLConnection conexao = (HttpURLConnection) urlSubdistritos.openConnection();
+                conexao.setRequestMethod("GET");
+                conexao.setRequestProperty("Content-type","application/json");
+                conexao.setDoOutput(true);
+                conexao.setConnectTimeout(3000);
+                conexao.connect();
+
+                Scanner scanner = new Scanner(urlSubdistritos.openStream());
+                while(scanner.hasNext()){
+                    respostaSubdistritos.append(scanner.next());
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+            return respostaSubdistritos.toString();
         }
             return null;
     }

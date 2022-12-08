@@ -1,4 +1,4 @@
-package com.example.apiibge;
+package com.example.API_IBGE;
 
 import android.content.Context;
 

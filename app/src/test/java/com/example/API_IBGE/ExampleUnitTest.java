@@ -1,4 +1,4 @@
-package com.example.apiibge;
+package com.example.API_IBGE;
 
 import org.junit.Test;
 

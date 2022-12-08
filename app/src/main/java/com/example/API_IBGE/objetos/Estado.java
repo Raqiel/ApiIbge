@@ -1,4 +1,4 @@
-package com.example.apiibge.objetos;
+package com.example.API_IBGE.objetos;
 
 public class Estado {
     Integer id;

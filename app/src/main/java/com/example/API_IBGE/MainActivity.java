@@ -1,23 +1,21 @@
-package com.example.apiibge;
+package com.example.API_IBGE;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
-import com.example.apiibge.objetos.Estado;
-import com.example.apiibge.objetos.Municipio;
+import com.example.API_IBGE.objetos.Estado;
+import com.example.API_IBGE.objetos.Municipio;
+import com.example.API_IBGE.objetos.Subdistrito;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
@@ -26,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private static ProgressBar carregando;
     Spinner spinnerEstados;
     Spinner spinnerMunicipios;
+    Spinner spinnerSubdistritos;
+    Municipio[] municipios = null;
 
 
     @Override
@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         spinnerEstados = findViewById(R.id.spinner_estados);
         spinnerMunicipios = findViewById(R.id.spinner_municipios);
+        spinnerSubdistritos = findViewById(R.id.spinner_subdistritos);
+
         carregando = findViewById(R.id.progressBar);
 
         String respostaEstados = getRespostaIBGE("estado");
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         Gson gsonEstados = new GsonBuilder().setPrettyPrinting().create();
         final Estado[] estados = gsonEstados.fromJson(respostaEstados, Estado[].class);
+
 
         ArrayList<String> estadosParaSpinner = new ArrayList<>();
 
@@ -83,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
         spinnerMunicipios.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                for (Municipio municipio:municipios){
+                    if (municipio.getNome().equals(spinnerMunicipios.getSelectedItem().toString())){
+                        solicitaSubdistritos(String.valueOf(municipio.getId()));
+                    }
+                }
             }
 
             @Override
@@ -99,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         String respostaMunicipios = getRespostaIBGE("municipio", siglasEstado);
 
         Gson gsonMunicipios = new GsonBuilder().setPrettyPrinting().create();
-        Municipio[] municipios = gsonMunicipios.fromJson(String.valueOf(respostaMunicipios), Municipio[].class);
+        municipios = gsonMunicipios.fromJson(String.valueOf(respostaMunicipios), Municipio[].class);
 
         final ArrayList<String> municipiosParaSpinner = new ArrayList<>();
         ArrayList<String> idMunicipios = new ArrayList<>();
@@ -116,6 +124,28 @@ public class MainActivity extends AppCompatActivity {
                 municipiosParaSpinner);
 
         spinnerMunicipios.setAdapter(adapterMunicipios);
+    }
+
+    private void solicitaSubdistritos(String idMunicipio) {
+
+        String respostaSubdistritos = getRespostaIBGE("subdistrito", idMunicipio);
+
+        Gson gsonSubdistritos = new GsonBuilder().setPrettyPrinting().create();
+        Subdistrito[] subdistritos = gsonSubdistritos.fromJson(String.valueOf(respostaSubdistritos), Subdistrito[].class);
+
+        final ArrayList<String> subdistritosParaSpinner = new ArrayList<>();
+
+        for(Subdistrito subdistrito: subdistritos){
+            subdistritosParaSpinner.add(subdistrito.getNome());
+        }
+
+        Collections.sort(subdistritosParaSpinner);
+
+        //formata o arraylist de arraylist para uma forma que seja compativel com o spinner
+        ArrayAdapter<String> adapterSubdistritos = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                subdistritosParaSpinner);
+
+        spinnerSubdistritos.setAdapter(adapterSubdistritos);
     }
 
     private String getRespostaIBGE(String... params) {
