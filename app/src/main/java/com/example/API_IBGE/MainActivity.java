@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import com.example.API_IBGE.objetos.Estado;
 import com.example.API_IBGE.objetos.Municipio;
 import com.example.API_IBGE.objetos.Subdistrito;
+import com.example.API_IBGE.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinnerMunicipios;
     Spinner spinnerSubdistritos;
     Municipio[] municipios = null;
+    final ArrayList<String> subdistritosParaSpinner = new ArrayList<>();
 
 
     @Override
@@ -35,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
         spinnerEstados = findViewById(R.id.spinner_estados);
         spinnerMunicipios = findViewById(R.id.spinner_municipios);
+        spinnerMunicipios.setEnabled(false);
         spinnerSubdistritos = findViewById(R.id.spinner_subdistritos);
+        spinnerSubdistritos.setEnabled(false);
 
         carregando = findViewById(R.id.progressBar);
 
@@ -54,9 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         Collections.sort(estadosParaSpinner);
 
-        /*
-
-         */
+        estadosParaSpinner.add(0, "Selecione o estado");
 
         //formata o arraylist de arraylist para uma forma que seja compativel com o spinner
         ArrayAdapter<String> adapterEstados = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
@@ -119,7 +121,12 @@ public class MainActivity extends AppCompatActivity {
 
         Collections.sort(municipiosParaSpinner);
 
-        //formata o arraylist de arraylist para uma forma que seja compativel com o spinner
+        municipiosParaSpinner.add(0,"Selecione o municipio");
+        spinnerMunicipios.setEnabled(true);
+        spinnerSubdistritos.setEnabled(false);
+        subdistritosParaSpinner.add(0, "selecione o subdistrito");
+        spinnerSubdistritos.setSelection(0);
+
         ArrayAdapter<String> adapterMunicipios = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 municipiosParaSpinner);
 
@@ -133,13 +140,26 @@ public class MainActivity extends AppCompatActivity {
         Gson gsonSubdistritos = new GsonBuilder().setPrettyPrinting().create();
         Subdistrito[] subdistritos = gsonSubdistritos.fromJson(String.valueOf(respostaSubdistritos), Subdistrito[].class);
 
-        final ArrayList<String> subdistritosParaSpinner = new ArrayList<>();
 
-        for(Subdistrito subdistrito: subdistritos){
-            subdistritosParaSpinner.add(subdistrito.getNome());
+
+        if(subdistritos.length > 0){
+
+            for(Subdistrito subdistrito: subdistritos){
+                subdistritosParaSpinner.add(subdistrito.getNome());
+            }
+
+            Collections.sort(subdistritosParaSpinner);
+
+            subdistritosParaSpinner.add(0, "selecione o subdistrito");
+            spinnerSubdistritos.setEnabled(true);
+        }else{
+            subdistritosParaSpinner.add(0, "Não existe subdistrito para esse municipio");
+            spinnerSubdistritos.setEnabled(false);
         }
 
-        Collections.sort(subdistritosParaSpinner);
+
+
+
 
         //formata o arraylist de arraylist para uma forma que seja compativel com o spinner
         ArrayAdapter<String> adapterSubdistritos = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
